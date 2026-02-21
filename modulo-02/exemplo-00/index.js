@@ -14,7 +14,7 @@ async function trainModel(inputXs, outputYs) {
     // É como se ela deixasse somente os dados interessantes seguirem viagem na rede
     // Se a informação chegou nesse neurônio é positiva, passa para frente!
     // Se for zero ou negativa, pode jogar fora, não vai servir para nada
-    model.add(tf.layers.dense({ inputShape: [7], units: 80, activation: 'relu' }))
+    model.add(tf.layers.dense({ inputShape: [7], units: 150, activation: 'relu' }))
 
     // Saída: 3 neurônios
     // um para cada categoria (premium, medium, basic)
@@ -51,12 +51,12 @@ async function trainModel(inputXs, outputYs) {
         outputYs,
         {
             verbose: 0,
-            epochs: 100,
+            epochs: 200,
             shuffle: true,
             callbacks: {
-                // onEpochEnd: (epoch, log) => console.log(
-                //     `Epoch: ${epoch}: loss = ${log.loss}`
-                // )
+                onEpochEnd: (epoch, log) => console.log(
+                    `Epoch: ${epoch}: loss = ${log.loss}`
+                )
             }
         }
     )
@@ -77,6 +77,7 @@ async function trainModel(inputXs, outputYs) {
 //     [0.33, 1, 0, 0, 1, 0, 0], // Erick
 //     [0, 0, 1, 0, 0, 1, 0],    // Ana
 //     [1, 0, 0, 1, 0, 0, 1]     // Carlos
+//     [0.67, 0, 0, 1, 0, 0, 1]  // Cleiton
 // ]
 
 // Usamos apenas os dados numéricos, como a rede neural só entende números.
@@ -84,7 +85,8 @@ async function trainModel(inputXs, outputYs) {
 const tensorPessoasNormalizado = [
     [0.33, 1, 0, 0, 1, 0, 0], // Erick
     [0, 0, 1, 0, 0, 1, 0],    // Ana
-    [1, 0, 0, 1, 0, 0, 1]     // Carlos
+    [1, 0, 0, 1, 0, 0, 1],     // Carlos
+    [0.67, 0, 0, 1, 0, 0, 1]   // Cleiton
 ]
 
 // Labels das categorias a serem previstas (one-hot encoded)
@@ -93,7 +95,8 @@ const labelsNomes = ["premium", "medium", "basic"]; // Ordem dos labels
 const tensorLabels = [
     [1, 0, 0], // premium - Erick
     [0, 1, 0], // medium - Ana
-    [0, 0, 1]  // basic - Carlos
+    [0, 0, 1], // basic - Carlos
+    [1, 0, 0]  // premium - Cleiton
 ];
 
 // Criamos tensores de entrada (xs) e saída (ys) para treinar o modelo
